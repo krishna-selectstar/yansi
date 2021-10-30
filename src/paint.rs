@@ -1,7 +1,7 @@
 use std::fmt;
 
-use style::{Style, Property};
 use color::Color;
+use style::{Property, Style};
 
 /// A structure encapsulating an item and styling.
 ///
@@ -113,7 +113,10 @@ impl<T> Paint<T> {
     /// ```
     #[inline]
     pub fn new(item: T) -> Paint<T> {
-        Paint { item, style: Style::default() }
+        Paint {
+            item,
+            style: Style::default(),
+        }
     }
 
     /// Constructs a new `Paint` structure encapsulating `item` with the active
@@ -203,8 +206,25 @@ impl<T> Paint<T> {
         Paint::new(item).fg(Color::Fixed(color))
     }
 
-    constructors_for!(T, black: Black, red: Red, green: Green, yellow: Yellow,
-        blue: Blue, magenta: Magenta, cyan: Cyan, white: White);
+    constructors_for!(
+        T,
+        black: Black,
+        red: Red,
+        green: Green,
+        yellow: Yellow,
+        blue: Blue,
+        magenta: Magenta,
+        cyan: Cyan,
+        white: White,
+        bright_black: BrightBlack,
+        bright_red: BrightRed,
+        bright_green: BrightGreen,
+        bright_yellow: BrightYellow,
+        bright_blue: BrightBlue,
+        bright_magenta: BrightMagenta,
+        bright_cyan: BrightCyan,
+        bright_white: BrightWhite
+    );
 
     /// Retrieves the style currently set on `self`.
     ///
@@ -333,14 +353,22 @@ impl<T> Paint<T> {
         self
     }
 
-    style_builder_for!(Paint<T>, |paint| paint.style.properties,
-                       bold: BOLD, dimmed: DIMMED, italic: ITALIC,
-                       underline: UNDERLINE, blink: BLINK, invert: INVERT,
-                       hidden: HIDDEN, strikethrough: STRIKETHROUGH);
+    style_builder_for!(
+        Paint<T>,
+        |paint| paint.style.properties,
+        bold: BOLD,
+        dimmed: DIMMED,
+        italic: ITALIC,
+        underline: UNDERLINE,
+        blink: BLINK,
+        invert: INVERT,
+        hidden: HIDDEN,
+        strikethrough: STRIKETHROUGH
+    );
 }
 
 macro_rules! impl_fmt_trait {
-    ($trait:ident, $fmt:expr) => (
+    ($trait:ident, $fmt:expr) => {
         impl<T: fmt::$trait> fmt::$trait for Paint<T> {
             fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
                 if Paint::is_enabled() && self.style.wrap {
@@ -363,7 +391,7 @@ macro_rules! impl_fmt_trait {
                 }
             }
         }
-    )
+    };
 }
 
 impl_fmt_trait!(Display, "{}");
