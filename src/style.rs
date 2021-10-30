@@ -1,4 +1,4 @@
-use std::fmt::{self, Display};
+use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::ops::BitOr;
 
@@ -182,16 +182,6 @@ macro_rules! checker_for {
             self.properties.contains(Property::$property)
         }
     );)*)
-}
-
-#[inline]
-fn write_spliced<T: Display>(c: &mut bool, f: &mut dyn fmt::Write, t: T) -> fmt::Result {
-    if *c {
-        write!(f, ";{}", t)
-    } else {
-        *c = true;
-        write!(f, "{}", t)
-    }
 }
 
 impl Style {
